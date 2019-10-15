@@ -1,0 +1,63 @@
+//函数指针
+在数据结构LocateElem MergeList OrderInsert ListTraverse等方法中需要对比ElemType的关系或者遍历数据项
+这之中我们可能用到> < ==等逻辑关系、前序后序中序等遍历方式，这种情况下方便的做法就是在函数中以指针函数作为一个参数可以解决调用的多元问题
+
+申明指针
+Status (*compare)(ElemType e1, ElemType e2);
+Status (*visit)();
+
+申明函数（以三种compare方式为例）
+Status compare1(ElemType e1, ElemType e2);
+Status compare2(ElemType e1, ElemType e2);
+Status compare3(ElemType e1, ElemType e2);
+Status OrderInsert(LinkList &L, ElemType e, Status(*compare)(ElemType, ElemType));//往按照compare法则排列的list中insert数据项e
+
+在使用OrderInsert的时候可以如下调用
+OrderInsert(L, e, compare1);
+OrderInsert(L, e, &compare1);
+编译器对于第一种写法处理就是第二种的写法
+在函数内调用的时候同样有两种调用写法
+compare(e, p);
+(*compare)(e, p);
+
+下面提供一段简单的实验代码，实现两个数字的大小比较
+#include<stdio.h>
+#include<stdlib.h>
+#define ERROR 0
+#define OK 1
+typedef int Status;
+typedef int ElemType;
+Status compare_equal(ElemType e1, ElemType e2){
+	if(e1 == e2) return OK;
+	else return ERROR;
+}
+
+Status compare_greater(ElemType e1, ElemType e2){
+	if(e1 > e2)	return OK;
+	else return ERROR;
+}
+
+Status compare_less(ElemType e1, ElemType e2){
+	if(e1 < e2) return OK;
+	else return ERROR;
+}
+
+Status comparison(ElemType e1, ElemType e2, Status (*compare)(ElemType, ElemType)){
+	if((*compare)(e1, e2))
+	//if(compare(e1,e2)) 
+		return OK;
+	else 
+		return ERROR;
+}
+
+int main(){
+	ElemType e1, e2;
+	e1 = 10; e2 = 11;
+	printf("%d\n", comparison(e1, e2, &compare_equal));
+	printf("%d\n", comparison(e1, e2, &compare_less));
+	printf("%d\n", comparison(e1, e2, compare_greater));
+	return 0;
+} 
+
+//备注1：关于指针的传值 &compare_equal是真正需要的，写compare_equal也行是因为编译器可以转过去
+//备注2：函数指针的调用 (*compare)(e1, e2); compare(e1, e2);都可以。我喜欢第一个
