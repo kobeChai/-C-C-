@@ -1,0 +1,45 @@
+//test new
+#include<iostream>
+#include<vector>
+using namespace std;
+typedef int VRType;
+typedef struct ArcCell{
+	VRType adj;//存权重，或者是否连接 
+	//InfoType *info; 这里没用 
+}ArcCell;//按照顶点个数分配空间 
+
+int main(){
+	int row = 3, col = 5;
+	int **array;
+	array = new int*[row];
+	for(int i = 0; i < row; i ++)
+		array[i] = new int[col];
+	for(int i = 0; i < row; i ++){
+		for(int j = 0; j < col; j ++)
+			cout << array[i][j] << ' ';
+		cout << endl;
+	}
+	
+	cout<<endl;
+	//vector开辟 
+	vector<vector<int> > _array(row, vector<int>(col, -1));
+	//翻译：以vector<int>位元素开辟vector _array;  而且这个vector长度为row，每一个元素用vector<int>(col)初始化
+	//vector<int>(col)调用默认构造函数 当然我们可以指定 vector<int>(col, -1)调用构造函数初始化 
+	for(int i = 0; i < row; i ++){
+		for(int j = 0; j < col; j ++)
+			cout << _array[i][j] << ' ';
+		cout << endl;
+	}
+	
+	cout<<endl;
+	ArcCell Cell;
+	Cell.adj = -1;
+	vector<vector<ArcCell> > AdjMatrix(row, vector<ArcCell>(row, Cell));
+	//成功了，这里相当于调用复制构造函数 
+	for(int i = 0; i < row; i ++){
+		for(int j = 0; j < row; j ++)
+			cout << AdjMatrix[i][j].adj << ' ';
+		cout << endl;
+	}
+	return 0;
+}
